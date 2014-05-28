@@ -88,7 +88,7 @@ public class BMapApiDemoMain extends Activity {
 		}
 		else{
 			text.setTextColor(Color.YELLOW);
-			text.setText("欢迎使用百度地图Android SDK v"+VersionInfo.getApiVersion());
+			text.setText("欢迎使用钱进地图Android SDK v"+VersionInfo.getApiVersion());
 		}
 		super.onResume();
 	}

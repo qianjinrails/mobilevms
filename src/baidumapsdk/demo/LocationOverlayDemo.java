@@ -68,6 +68,7 @@ public class LocationOverlayDemo extends Activity {
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	Log.d("qianjin", "qianjin");
         super.onCreate(savedInstanceState);
         /**
          * 使用地图sdk前需先初始化BMapManager.
@@ -138,6 +139,7 @@ public class LocationOverlayDemo extends Activity {
         //定位初始化
         mLocClient = new LocationClient( this );
         locData = new LocationData();
+        Log.v("qianjin", "qianjin");
         mLocClient.registerLocationListener( myListener );
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true);//打开gps
@@ -161,6 +163,7 @@ public class LocationOverlayDemo extends Activity {
      * 手动触发一次定位请求
      */
     public void requestLocClick(){
+    	Log.d("qianjin", "qianjinrequestLocClick");
     	isRequest = true;
         mLocClient.requestLocation();
         Toast.makeText(LocationOverlayDemo.this, "正在定位……", Toast.LENGTH_SHORT).show();
@@ -179,6 +182,7 @@ public class LocationOverlayDemo extends Activity {
 	 * 创建弹出泡泡图层
 	 */
 	public void createPaopao(){
+		Log.d("qianjin", "qianjincreatePaopao");
 		viewCache = getLayoutInflater().inflate(R.layout.custom_text_view, null);
         popupText =(TextView) viewCache.findViewById(R.id.textcache);
         //泡泡点击响应回调
@@ -202,7 +206,9 @@ public class LocationOverlayDemo extends Activity {
                 return ;
             
             locData.latitude = location.getLatitude();
+            Log.v("qianjin", "qianjin"+locData.latitude);
             locData.longitude = location.getLongitude();
+            Log.v("qianjin", "qianjin"+locData.longitude);
             //如果不显示定位精度圈，将accuracy赋值为0即可
             locData.accuracy = location.getRadius();
             // 此处可以设置 locData的方向信息, 如果定位 SDK 未返回方向信息，用户可以自己实现罗盘功能添加方向信息。
@@ -241,6 +247,7 @@ public class LocationOverlayDemo extends Activity {
   		}
   		@Override
   		protected boolean dispatchTap() {
+  			Log.d("qianjin", "qianjindispatchTap");
   			// TODO Auto-generated method stub
   			//处理点击事件,弹出泡泡
   			popupText.setBackgroundResource(R.drawable.popup);

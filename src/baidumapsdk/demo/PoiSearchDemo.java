@@ -1,6 +1,10 @@
 package baidumapsdk.demo;
 
 import android.app.Activity;
+import android.content.Context;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,6 +28,7 @@ import com.baidu.mapapi.search.MKSuggestionInfo;
 import com.baidu.mapapi.search.MKSuggestionResult;
 import com.baidu.mapapi.search.MKTransitRouteResult;
 import com.baidu.mapapi.search.MKWalkingRouteResult;
+import com.baidu.platform.comapi.basestruct.GeoPoint;
 
 /**
  * 演示poi搜索功能 
@@ -38,7 +43,8 @@ public class PoiSearchDemo extends Activity {
 	private AutoCompleteTextView keyWorldsView = null;
 	private ArrayAdapter<String> sugAdapter = null;
     private int load_Index;
-	
+//	private GeoPoint geoPoint = new GeoPoint(39952000, 116335000);;
+    private GeoPoint geoPoint;
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	 super.onCreate(savedInstanceState);
@@ -56,6 +62,8 @@ public class PoiSearchDemo extends Activity {
              app.mBMapManager.init(new DemoApplication.MyGeneralListener());
          }
          setContentView(R.layout.activity_poisearch);
+         getInitLoc();// 程序打开时候获取当前位置 显示地图上
+
         mMapView = (MapView)findViewById(R.id.bmapView);
 		mMapView.getController().enableClick(true);
         mMapView.getController().setZoom(12);
@@ -74,7 +82,7 @@ public class PoiSearchDemo extends Activity {
                 }
             }
             /**
-             * 在此处理poi搜索结果
+             * 在此处理poi搜索结果   
              */
             public void onGetPoiResult(MKPoiResult res, int type, int error) {
                 // 错误号可参考MKEvent中的定义
@@ -225,8 +233,11 @@ public class PoiSearchDemo extends Activity {
     public void searchButtonProcess(View v) {
           EditText editCity = (EditText)findViewById(R.id.city);
           EditText editSearchKey = (EditText)findViewById(R.id.searchkey);
-          mSearch.poiSearchInCity(editCity.getText().toString(), 
-                  editSearchKey.getText().toString());
+          //mSearch.poiSearchInCity(editCity.getText().toString(), 
+                  //editSearchKey.getText().toString());
+          //GeoPoint geoPoint = new GeoPoint(39952000, 116335000);
+          mSearch.poiSearchNearBy("公交车站",geoPoint, 1000);
+                  
     }
    public void goToNextPage(View v) {
         //搜索下一组poi
@@ -235,4 +246,28 @@ public class PoiSearchDemo extends Activity {
             Toast.makeText(PoiSearchDemo.this, "先搜索开始，然后再搜索下一组数据", Toast.LENGTH_SHORT).show();
         }
     }
+   
+	private void getInitLoc() {// 初始化时候获取坐标
+		try {
+
+			LocationManager locationManager;
+			String context = Context.LOCATION_SERVICE;
+			locationManager = (LocationManager) getSystemService(context);
+			// String provider = LocationManager.GPS_PROVIDER;
+
+			Criteria criteria = new Criteria();
+			criteria.setAccuracy(Criteria.ACCURACY_FINE);
+			criteria.setAltitudeRequired(false);
+			criteria.setBearingRequired(false);
+			criteria.setCostAllowed(true);
+			criteria.setPowerRequirement(Criteria.POWER_LOW);
+			String provider = locationManager.getBestProvider(criteria, true);
+			Location location = locationManager.getLastKnownLocation(provider);
+			geoPoint = new GeoPoint((int) (location.getLatitude() * 1e6),
+					(int) (location.getLongitude() * 1e6));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
 }
